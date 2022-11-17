@@ -1,0 +1,63 @@
+@startuml
+title "Lab 3 - Running solution on Kubernetes"
+node PC {
+
+    node KuberentesCluster{
+
+        node ingress as IngressFrontend{
+        }
+
+        node ingress as IngressBackend{
+        }
+
+        node service as ServiceFrontend{
+        }
+
+        node service as ServiceBackend{
+        }
+
+        node Node as MinikubeNode{
+            node pod as BackendPod{
+                node docker as BackendDocker{
+                    artifact backend
+                }
+            }
+            node pod as FrontendPod{
+                node docker as FrontendDocker{
+                    artifact frontend
+                }
+            }
+        }
+    }
+}
+
+IngressFrontend --> ServiceFrontend: send traffic
+IngressBackend --> ServiceBackend: send traffic
+
+ServiceBackend --> backend: con
+ServiceFrontend --> frontend:  con
+
+frontend -> backend: ws://api.chat-test.com/websocket
+
+
+note top of IngressBackend
+Maps api.chat-test.com into service
+endnote
+
+note top of IngressFrontend
+Maps chat-test.com into service
+endnote
+
+
+note bottom of backend
+env:
+PORT execution port
+endnote
+
+note bottom of frontend
+env var:
+PORT execution port
+REACT_APP_WS_DOMAIN WebSocket domain if any
+endnote
+
+@enduml

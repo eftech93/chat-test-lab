@@ -1,0 +1,77 @@
+@startuml
+title "Lab 3 - Running solution on machine"
+node PC {
+
+    node KuberentesCluster{
+
+        node ingress as IngressFrontend{
+        }
+
+        node ingress as IngressBackend{
+        }
+
+        node service as ServiceFrontend{
+        }
+
+        node service as ServiceBackend{
+        }
+
+        node Node as MinikubeNode{
+            node pod as BackendPod{
+                node docker as BackendDocker{
+                    artifact backend
+                }
+            }
+            node pod as FrontendPod{
+                node docker as FrontDocker{
+                    artifact frontend
+                }
+            }
+            node pod as FrontendPod1{
+                node docker as FrontDocker1{   
+                    artifact frontend1
+                }
+            }
+
+            node pod as FrontendPod2{
+                node docker as FrontDocker2{
+                    artifact frontend2
+                }
+            }
+        }
+    }
+}
+
+IngressFrontend --> ServiceFrontend: send traffic
+IngressBackend --> ServiceBackend: send traffic
+
+ServiceBackend --> backend: transfer request
+ServiceFrontend --> frontend:  transfer request
+ServiceFrontend --> frontend1:  transfer request
+ServiceFrontend --> frontend2:  transfer request
+
+note top of IngressBackend
+Maps api.chat-test.com into service
+endnote
+
+note top of IngressFrontend
+Maps chat-test.com into service
+endnote
+
+note right of ServiceFrontend
+Load balance into actual pods
+endnote
+
+note bottom of backend
+env:
+PORT 3400
+endnote
+
+note "env var:\nPORT 4000\nREACT_APP_WS_DOMAIN api.chat-test.com" as frontend_note
+
+frontend .. frontend_note 
+frontend1 .. frontend_note
+frontend2 .. frontend_note
+
+
+@enduml

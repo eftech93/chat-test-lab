@@ -1,0 +1,48 @@
+@startuml kubernetes
+
+footer Kubernetes Plant-UML
+scale max 1024 width
+
+skinparam nodesep 10
+skinparam ranksep 10
+
+' Kubernetes
+!define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
+
+!includeurl KubernetesPuml/kubernetes_Common.puml
+!includeurl KubernetesPuml/kubernetes_Context.puml
+!includeurl KubernetesPuml/kubernetes_Simplified.puml
+
+!includeurl KubernetesPuml/OSS/KubernetesSvc.puml
+!includeurl KubernetesPuml/OSS/KubernetesIng.puml
+!includeurl KubernetesPuml/OSS/KubernetesPod.puml
+!includeurl KubernetesPuml/OSS/KubernetesRs.puml
+!includeurl KubernetesPuml/OSS/KubernetesDeploy.puml
+!includeurl KubernetesPuml/OSS/KubernetesHpa.puml
+!includeurl KubernetesPuml/OSS/KubernetesNode.puml
+
+actor "User" as userAlias
+left to right direction
+
+' Kubernetes Components
+Cluster_Boundary(cluster, "Minikube-Kubernetes Cluster") {
+    Namespace_Boundary(ns, "default") {
+        KubernetesIng(ingress, "api.chat-test.com", "")
+        KubernetesSvc(svc, "service backend", "")
+        KubernetesPod(pod1, "Backend pod", "")
+
+        KubernetesIng(ingress2, "chat-test.com", "")
+        KubernetesSvc(svc2, "service frontend", "")
+        KubernetesPod(pod2, "Frontend pod", "")
+    }
+}
+
+Rel(userAlias,ingress," ")
+Rel(ingress,svc," ")
+Rel(svc,pod1," ")
+
+Rel(userAlias,ingress2," ")
+Rel(ingress2,svc2," ")
+Rel(svc2,pod2," ")
+
+@enduml

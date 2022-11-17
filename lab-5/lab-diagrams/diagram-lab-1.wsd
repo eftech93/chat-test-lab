@@ -1,0 +1,86 @@
+@startuml
+title "Lab 5 - Running solution on Kubernetes"
+node PC {
+
+    node KuberentesCluster{
+
+        node ingress as IngressFrontend{
+        }
+
+        node ingress as IngressBackend{
+        }
+
+        node service as ServiceFrontend{
+        }
+
+        node service as ServiceBackend{
+        }
+
+        node service as ServiceBroker{
+        }
+
+        node Node as MinikubeNode{
+            node pod as BackendPod{
+                node docker as BackendDocker{
+                    artifact backend
+                }
+            }
+            node pod as FrontendPod{
+                node docker as FrontDocker{
+                    artifact frontend
+                }
+            }
+            node pod as RabbitMQPod {
+                node docker as RabbitMQDocker{
+                    artifact rabbitmq
+                }
+            }
+        }
+        node Node as MinikubeNode1{
+            node pod as BackendPod1{
+                node docker as BackendDocker1{
+                    artifact backend1
+                }
+            }
+            node pod as FrontendPod1{
+                node docker as FrontDocker1{
+                    artifact frontend1
+                }
+            }
+        }
+    }
+}
+
+IngressFrontend --> ServiceFrontend: send traffic
+IngressBackend --> ServiceBackend: send traffic
+
+ServiceBackend --> backend: conn
+ServiceBackend --> backend1: conn
+
+ServiceFrontend --> frontend:  conn
+ServiceFrontend --> frontend1:  conn
+
+ServiceBroker --> rabbitmq: conn
+
+frontend -> backend: ws://api.chat-test.com
+
+note top of IngressBackend
+Maps api.chat-test.com into service
+endnote
+
+note top of IngressFrontend
+Maps chat-test.com into service
+endnote
+
+
+note "env:\nPORT execution port\nUse service name to talk to rabbitmq\nUsing: amqp://guest:gest@rabbitmq" as backend_note
+
+backend .. backend_note
+backend1 .. backend_note
+
+note "env var:\nPORT execution port\nREACT_APP_WS_DOMAIN WebSocket domain if any" as frontend_note
+
+frontend .. frontend_note
+frontend1 .. frontend_note
+
+@enduml

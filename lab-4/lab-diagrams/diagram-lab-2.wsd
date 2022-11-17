@@ -1,0 +1,101 @@
+@startuml
+title "Lab 3 - Running solution on machine"
+node PC {
+
+    node KuberentesCluster{
+
+        node ingress as IngressFrontend{
+        }
+
+        node ingress as IngressBackend{
+        }
+
+        node service as ServiceFrontend{
+        }
+
+        node service as ServiceBackend{
+        }
+
+        node service as ServiceRabbitMQ{
+        }
+
+        node Node as MinikubeNode{
+            node pod as BackendPod{
+                node docker as BackendDocker{
+                    artifact backend
+                }
+            }
+            node pod as BackendPod1{
+                node docker as BackendDocker1{
+                    artifact backend1
+                }
+            }
+            node pod as BackendPod2{
+                node docker as BackendDocker2{
+                    artifact backend2
+                }
+            }
+            node pod as FrontendPod{
+                node docker as FrontDocker{
+                    artifact frontend
+                }
+            }
+
+            node pod as FrontendPod1{
+                node docker as FrontDocker1{
+                    artifact frontend1
+                }
+            }
+
+            node pod as FrontendPod2{
+                node docker as FrontDocker2{
+                    artifact frontend2
+                }
+            }
+            node pod as RabbitMQPod{
+                node docker as RabbitMQDocker{
+                    artifact rabbitmq
+                }
+            }
+        }
+    }
+}
+
+ServiceRabbitMQ --> rabbitmq: send traffic
+
+IngressFrontend --> ServiceFrontend: send traffic
+IngressBackend --> ServiceBackend: send traffic
+
+ServiceBackend --> backend: transfer request
+ServiceBackend --> backend1: transfer request
+ServiceBackend --> backend2: transfer request
+
+ServiceFrontend --> frontend:  transfer request
+ServiceFrontend --> frontend1:  transfer request
+ServiceFrontend --> frontend2:  transfer request
+
+note top of IngressBackend
+Maps api.chat-test.com into service
+endnote
+
+note top of IngressFrontend
+Maps chat-test.com into service
+endnote
+
+note right of ServiceFrontend
+Load balance into actual pods
+endnote
+
+note "env:\nPORT 3400" as backend_note
+backend .. backend_note
+backend1 .. backend_note
+backend2 .. backend_note
+
+note "env var:\nPORT 4000\nREACT_APP_WS_DOMAIN api.chat-test.com" as frontend_note
+
+frontend .. frontend_note 
+frontend1 .. frontend_note
+frontend2 .. frontend_note
+
+
+@enduml

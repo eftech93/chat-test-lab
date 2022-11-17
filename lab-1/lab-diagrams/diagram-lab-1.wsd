@@ -1,0 +1,22 @@
+@startuml
+title "Lab 1 - Running solution on machine"
+node PC {
+    artifact backend
+    artifact frontend
+}
+
+frontend -> backend: ws://localhost:8080
+
+note right of backend
+env:
+PORT execution port
+endnote
+
+note bottom of frontend
+env var:
+PORT execution port
+REACT_APP_WS_PORT WebSocket port on localhost
+REACT_APP_WS_DOMAIN WebSocket domain if any
+
+endnote
+@enduml

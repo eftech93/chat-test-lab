@@ -1,0 +1,36 @@
+@startuml
+title "Lab 1 - Running solution on machine"
+node PC {
+    artifact backend
+    node WebBrowser1
+    node WebBrowser2
+
+    artifact frontend_instance_1
+    artifact frontend_instance_2
+}
+
+WebBrowser1 --> frontend_instance_1: localhost:4001
+WebBrowser2 --> frontend_instance_2: localhost:4002
+frontend_instance_1 --> backend: ws://localhost:4000
+frontend_instance_2 --> backend: ws://localhost:4000
+
+
+note left of frontend_instance_2
+env var:
+PORT 4002
+REACT_APP_WS_PORT 4000
+endnote
+
+note bottom of backend
+env:
+PORT 4000
+endnote
+
+note right of frontend_instance_1
+env var:
+PORT 4001
+REACT_APP_WS_PORT 4000
+endnote
+
+
+@enduml

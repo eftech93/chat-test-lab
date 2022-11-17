@@ -1,0 +1,9 @@
+@startuml
+
+node PC{
+    artifact backend
+    artifact frontend
+}
+
+frontend -> backend: ws://localhost:8080
+@enduml
