@@ -1,4 +1,4 @@
-# Fifth Lab - Deploy multiple Node app, React app and RabbitMQ on Kubernetes (minikube)
+# Fifth Lab - Deploy multiple NodeJs app, ReactJs app and RabbitMQ on Kubernetes (minikube). Multi node cluster.
 
 In this lab, we are going to deploy both apps on a kubernetes cluster in the local machine using minikune. Each app will be deploy with 3 pod each, and they will be able to talk to each other. Also, our cluster will have 3 nodes
 

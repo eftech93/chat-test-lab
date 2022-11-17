@@ -73,7 +73,7 @@ ServiceBackend --> backend2: conn
 
 ServiceFrontend --> frontend:  conn
 ServiceFrontend --> frontend1:  conn
-ServiceFrontend --> frontend3:  conn
+ServiceFrontend --> frontend2:  conn
 
 ServiceBroker --> rabbitmq: conn
 

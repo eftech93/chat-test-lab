@@ -1,4 +1,4 @@
-# First Lab - Create Node app and React app
+# First Lab - Create NodeJs app and ReactJs app
 
 In this lab, we are going to create an NodeJS that contains a Web Socket, also we are going to create a ReactJS that consumes the Web socket.
 

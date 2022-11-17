@@ -1,4 +1,4 @@
-# Second Lab - Containerize Node app and React app
+# Second Lab - Containerize NodeJs app and ReactJs app
 
 In this lab, we are going to containerize both apps using docker, please be aware that we are not going to apply containers for a production level/scenario. 
 

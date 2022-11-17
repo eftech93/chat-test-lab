@@ -1,4 +1,4 @@
-# Third Lab - Deploy Node app and React app on Kubernetes (minikube)
+# Third Lab - Deploy NodeJs app and ReactJs app on Kubernetes (minikube)
 
 In this lab, deploy both apps on a kubernetes cluster in the local machine using minikune.
 
