@@ -1,0 +1,12 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: chat-backend-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: chat-backend-master
+  minReplicas: 1
+  maxReplicas: 30
+  targetCPUUtilizationPercentage: 70

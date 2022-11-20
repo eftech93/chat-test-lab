@@ -1,10 +1,11 @@
 # Eighth Lab - Deploy multiple NodeJs app, ReactJs app and RabbitMQ on Kubernetes (minikube). Multi node cluster, using VirtualBox VMs. Stress test and horizontal scaling
 
-In this lab, we are going to deploy both apps on a kubernetes cluster in the local machine using minikune. Each app will be deploy with 3 pod each, and they will be able to talk to each other. Also, our cluster will have 3 nodes.
+In this lab, we are going to deploy both apps on a kubernetes cluster in the local machine using minikune. Each app will be deploy with 3 pod each, and they will be able to talk to each other. Also, our cluster will have 3 nodes. It also will have an autoscaling configuration for the backend.
+
+It will have another cluster running that will generate traffic for backend.
 
 Backend will have 10 replicas (pods), and the frontend will also have 10 replicas (pods), all of them devided evenly on the 3 VMs nodes.
 
-We are going to create 
 
 ## Solution diagrams
 
@@ -13,48 +14,56 @@ We are going to create
 ### Running example diagram
 ![Deployment multiple clients Diagram](./lab-images/diagram-lab-2.png)
 
-# Fifth lab instructions
+# Eight lab instructions
 
 For this lab you may need to have enough resources to run the cluster, we are going to use 12 CPUs and 30000 Mb of disk,(by default the nodes gets 2 cpus and 2000 Mb of disk).
 
-## Run minikube with docker driver
+## Create two clusters (app cluster and testing cluster)
 
+Create app cluster:
 On terminal:
 
 ```
 minikube start --driver=virtualbox ---nodes 3 --cpus 3 --memory 10000
 ```
 
+Create testing cluster:
+On terminal:
+
+```
+minikube start -p testing-profile --driver=virtualbox --nodes 3 --cpus 2 --memory 20000
+```
+
+
 ## Building docker images
+
+Because we are using multiple clusters, the previous configuration will not work. So that there are two options, option one add a registry from which the cluster can pull the images or, two, we can build the image directly into the cluster registry.
 
 ### Building backend docker container
 
 On terminal:
 
 ```
-cd lab-6/backend
-docker build -t chat/backend .
+cd lab-8/backend
+minikube -p minikube image build -t chat/backend .
+
 ```
 
 ### Building frontend docker container
 
 On terminal:
-
 ```
-cd lab-6/frontend
-docker build -t chat/frontend .
-```
-
-## Import docker images into minikube 
-
-On terminal
-
-```
-minikube image load chat/frontend
-minikube image load chat/backend
+cd lab-8/frontend
+minikube -p minikube image build -t chat/fronend .
 ```
 
-Note: it can take some time to load the images, let it finish
+### Building testing docker container
+
+On terminal:
+```
+cd lab-8/frontend
+minikube -p testing-profile image build -t chat/test-backend .
+```
 
 ## Install minikube addons
 
@@ -66,23 +75,40 @@ These are the addos to be installed:
 To install them, run on terminal:
 
 ```
-minikube addons enable dashboard
-minikube addons enable metrics-server
-minikube addons enable ingress
+minikube -p minikube addons enable dashboard
+minikube -p minikube addons enable metrics-server
+minikube -p minikube addons enable ingress
+
+minikube -p testing-profile addons enable dashboard
+minikube -p testing-profile addons enable metrics-server
 ```
 
 Note: the ingress addons can take some time to be installed.
 
 ## Deploy yaml file
 
+### Deploy solution - for default cluster
+
 On terminal:
 
 ``` 
-cd lab-7/deployment
+kubectl context use-context minikube
+cd lab-8/deployment
+
 kubectl create -f deployment_config.yml
 kubectl create -f deployment_broker.yml
 kubectl create -f deployment_frontend.yml
 kubectl create -f deployment_backend.yml
+```
+
+### Deploy solution - for testing cluster
+
+``` 
+kubectl context use-context testing-profile
+cd lab-8/deployment
+
+kubectl create -f deployment_config.yml
+kubectl create -f deployment_test_backend.yml
 ```
 
 ## Get minikube cluster ip
@@ -125,7 +151,13 @@ For my local environment it looks like:
 on terminal:
 
 ```
-minikube dashboard
+minikube -p minikube dashboard
 ```
 
-There you can find the deployment status of each pod, service, deployment and ingress.
+
+on another terminal:
+
+```
+minikube -p testing-profile dashboard
+```
+

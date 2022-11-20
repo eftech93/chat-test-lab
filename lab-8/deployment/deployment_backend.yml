@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: backend
-  replicas: 10
+  replicas: 1
   template:
     metadata:
       labels:
@@ -29,6 +29,11 @@ spec:
         ports:
         - containerPort: 3400
           name: ws-port
+        resources:
+          requests: 
+            cpu: "250m"
+          limits:
+            cpu: "500m"
 ---
 apiVersion: v1
 kind: Service

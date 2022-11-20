@@ -30,7 +30,7 @@ minikube start --driver=virtualbox ---nodes 3 --cpus 3 --memory 10000
 On terminal:
 
 ```
-cd lab-6/backend
+cd lab-7/backend
 docker build -t chat/backend .
 ```
 
@@ -39,7 +39,7 @@ docker build -t chat/backend .
 On terminal:
 
 ```
-cd lab-6/frontend
+cd lab-7/frontend
 docker build -t chat/frontend .
 ```
 

@@ -6,4 +6,4 @@ data:
   # Configuration values can be set as key-value properties
   broker_uri: guest:guest@rabbitmq
   backend_domain: api.chat-test.com
-  test_delay: "1"
+  test_delay: "10"

@@ -2,25 +2,35 @@
 title "Lab 6 - Running solution on Kubernetes"
 node PC {
 
-    node KuberentesCluster{
+    node DefaultKuberentesCluster{
 
-        node ingress as IngressFrontend{
-        }
+        node ingress as IngressFrontend { 
+        } 
 
         node ingress as IngressBackend{
         }
 
+        artifact HorizontalAutoScaler as HASBackend
+
+        artifact Deployment as DeploymentBackend
+
         node service as ServiceFrontend{
         }
 
+        artifact Deployment as DeploymentFrontend
+
         node service as ServiceBackend{
         }
+
+        artifact Deployment as DeploymentBroker
 
         node service as ServiceBroker{
         }
 
         node "VM ControlPanel Node"  as MinikubeNode{
-            node pod as BackendPod{
+            artifact config as ConfigApp
+
+            node pod as BackendPod {
                 node docker as BackendDocker{
                     artifact backend
                 }
@@ -49,18 +59,55 @@ node PC {
             }
         }
     }
+
+    node TestingCluster {
+        node service as ServiceTest 
+        artifact config as ConfigTestApp
+        node "VM ControlPanel" as TestingProfile1{
+            node pod as TestingPod1{
+                node docker as TestingDocker1{
+                    artifact "testing-app" as testingapp1
+                }
+            }
+            node pod as TestingPod2{
+                node docker as TestingDocker2{
+                    artifact "testing-app" as testingapp2
+                }
+            }
+        }
+
+
+        node "VM ControlPanel" as TestingProfile2{
+            node pod as TestingPod3{
+                node docker as TestingDocker3{
+                    artifact "testing-app" as testingapp3
+                }
+            }
+            node pod as TestingPod4{
+                node docker as TestingDocker4{
+                    artifact "testing-app" as testingapp4
+                }
+            }
+        }
+    }
 }
 
 IngressFrontend --> ServiceFrontend: send traffic
 IngressBackend --> ServiceBackend: send traffic
 
-ServiceBackend --> backend: conn
-ServiceBackend --> backend1: conn
+HASBackend -> DeploymentBackend
+DeploymentBackend --> ServiceBackend
 
-ServiceFrontend --> frontend:  conn
-ServiceFrontend --> frontend1:  conn
+ServiceBackend --> backend
+ServiceBackend --> backend1
 
-ServiceBroker --> rabbitmq: conn
+DeploymentFrontend --> ServiceFrontend
+
+ServiceFrontend --> frontend
+ServiceFrontend --> frontend1
+
+DeploymentBroker --> ServiceBroker
+ServiceBroker --> rabbitmq
 
 frontend -> backend: ws://api.chat-test.com
 
@@ -82,5 +129,10 @@ note "env var:\nPORT execution port\nREACT_APP_WS_DOMAIN WebSocket domain if any
 
 frontend .. frontend_note
 frontend1 .. frontend_note
+
+ServiceTest --> testingapp1
+ServiceTest --> testingapp2
+ServiceTest --> testingapp3
+ServiceTest --> testingapp4
 
 @enduml

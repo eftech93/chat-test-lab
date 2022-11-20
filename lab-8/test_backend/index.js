@@ -10,7 +10,7 @@ const items = ["hola mundo", "como estas", "bien y tu", "que haces", "nada y tu"
 function sendMessage(){
     var item = items[Math.floor(Math.random()*items.length)];
     ws.send(item);
-    setTimeout(sendMessage, delay * 1000); //delay is in secs
+    setTimeout(sendMessage, delay * 10); //delay is in secs 0.01 seg
 }
 
 ws.on('open', function open() {
