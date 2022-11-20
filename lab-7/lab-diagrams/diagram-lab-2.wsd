@@ -1,5 +1,5 @@
 @startuml
-title "Lab 6 - Running solution on Kubernetes"
+title "Lab 7 - Running solution on Kubernetes"
 node PC {
 
     node KuberentesCluster{

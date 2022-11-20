@@ -161,3 +161,19 @@ on another terminal:
 minikube -p testing-profile dashboard
 ```
 
+## Increase test-backend replicas to 80
+
+To increase the replica, you can go to the testing-profile dashboard, go to deplyoments, and click on the 3 dots button and click the option scale, set the scale to 80.
+
+Or on terminal:
+
+```
+kubectl config use-context testing-profile
+kubectl scale deployment test-backend --replicas=50
+```
+
+
+After a couple of seconds, the Horizontal Auto Scale must start creating new pods of chat-backend-master.
+
+
+Then you can reduce the number of replicas for the test-backend to 5, and after a couple of minutes, the Horizontal Auto Scale should start removing some pods.
