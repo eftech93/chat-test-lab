@@ -20,7 +20,13 @@ kubectl get deployments
 
 kubectl get ingress
 
+## Use cluster
 
+kubectl config use-context cluster_nam
+
+## Get clusters
+
+kubectl config get-contexts
 
 # Minikube
 
@@ -54,6 +60,10 @@ start minikube --memory 10000
 
 Defult value is 2 Gb
 
+## Start a new cluster
+
+start minikube -p cluster_name
+
 ## Install addons
 
 start minikube addons enable 
@@ -72,10 +82,13 @@ minikube dashboard
 
 cannot close the terminal
 
+## Build image into minikube cluster
+
+minikubect -p cluster_name image build -t ta_name .
+
 # Docker
 
 ## Building image with Tag
 
 docker build -t name .
 
-# Linux Ubuntu
