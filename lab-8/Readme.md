@@ -11,10 +11,7 @@ Backend will have 10 replicas (pods), and the frontend will also have 10 replica
 
 ![Deployment Diagram](./lab-images/diagram-lab-1.png)
 
-### Running example diagram
-![Deployment multiple clients Diagram](./lab-images/diagram-lab-2.png)
-
-# Eight lab instructions
+# Eighth lab instructions
 
 For this lab you may need to have enough resources to run the cluster, we are going to use 12 CPUs and 30000 Mb of disk,(by default the nodes gets 2 cpus and 2000 Mb of disk).
 
