@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-backend-master
+  labels:
+    app: chat
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: chat/backend:latest
+        imagePullPolicy: Never
+        env:
+        - name: PORT
+          value: "3400"
+        - name: RABBIT_MQ_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              name: chat-configs
+              key: broker_uri
+        ports:
+        - containerPort: 3400
+          name: ws-port
+        resources:
+          requests: 
+            cpu: "250m"
+          limits:
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-backend-master
+  labels:
+    app: backend
+spec:
+  type: NodePort
+  ports:
+  - port: 3400
+    targetPort: ws-port
+  selector:
+    app: backend
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-backend-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: api.chat-test.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-backend-master
+                port:
+                  number: 3400
